@@ -19,8 +19,15 @@ pipeline {
         stage('Build and Deploy') {
             steps {
                 script {
-                    bat 'docker-compose down'
-                    bat 'docker-compose up --build'
+                    bat 'docker rm -f myapp-nginx || true'
+                    bat 'docker rm -f myapp-database || true'
+                    bat 'docker rm -f myapp-phpmyadmin || true'
+                    bat 'docker rm -f myapp-wordpress || true'
+
+                    // Dừng và loại bỏ các container cũ
+                    bat 'docker-compose down --remove-orphans'
+                    // Xây dựng và triển khai bằng Docker Compose
+                    bat 'docker-compose up --build -d'
                 }
             }
         }
